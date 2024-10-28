@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools>=75.1.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -13,17 +13,17 @@ classifiers = [
     "License :: OSI Approved :: Apache Software License",
 ]
 dependencies = [
-    "torch==2.1.2", "torchvision==0.16.2",
-    "transformers==4.37.2", "tokenizers==0.15.1", "sentencepiece==0.1.99", "shortuuid",
-    "accelerate==0.21.0", "peft", "bitsandbytes",
-    "pydantic", "markdown2[all]", "numpy", "scikit-learn==1.2.2",
+    "torch==2.5.0", "torchvision==0.20.0",
+    "transformers==4.37.2", "tokenizers==0.15.1", "sentencepiece==0.1.99", "shortuuid==1.0.13",
+    "accelerate==1.0.1", "peft==0.13.2", "bitsandbytes==0.44.1",
+    "pydantic==2.9.2", "markdown2==2.5.1", "numpy==1.26.4", "scikit-learn==1.2.2",
     "gradio==4.16.0", "gradio_client==0.8.1",
-    "requests", "httpx==0.24.0", "uvicorn", "fastapi",
+    "requests==2.32.3", "httpx==0.24.0", "uvicorn==0.32.0", "fastapi==0.110.3",
     "einops==0.6.1", "einops-exts==0.0.4", "timm==0.6.13",
 ]
 
 [project.optional-dependencies]
-train = ["deepspeed==0.12.6", "ninja", "wandb"]
+train = ["deepspeed==0.15.3", "ninja==1.11.1.1", "wandb"]
 build = ["build", "twine"]
 
 [project.urls]
