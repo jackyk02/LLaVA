@@ -68,8 +68,8 @@ class Conversation:
                 else:
                     ret += role
         elif self.sep_style == SeparatorStyle.LLAMA_2:
-            wrap_sys = lambda msg: f"<<SYS>>\n{msg}\n<</SYS>>\n\n"
-            wrap_inst = lambda msg: f"[INST] {msg} [/INST]"
+            def wrap_sys(msg): return f"<<SYS>>\n{msg}\n<</SYS>>\n\n"
+            def wrap_inst(msg): return f"[INST] {msg} [/INST]"
             ret = ""
 
             for i, (role, message) in enumerate(messages):
@@ -79,7 +79,8 @@ class Conversation:
                 if message:
                     if type(message) is tuple:
                         message, _, _ = message
-                    if i == 0: message = wrap_sys(self.system) + message
+                    if i == 0:
+                        message = wrap_sys(self.system) + message
                     if i % 2 == 0:
                         message = wrap_inst(message)
                         ret += self.sep + message
@@ -121,12 +122,16 @@ class Conversation:
                             if width == height:
                                 return pil_img
                             elif width > height:
-                                result = Image.new(pil_img.mode, (width, width), background_color)
-                                result.paste(pil_img, (0, (width - height) // 2))
+                                result = Image.new(
+                                    pil_img.mode, (width, width), background_color)
+                                result.paste(
+                                    pil_img, (0, (width - height) // 2))
                                 return result
                             else:
-                                result = Image.new(pil_img.mode, (height, height), background_color)
-                                result.paste(pil_img, ((height - width) // 2, 0))
+                                result = Image.new(
+                                    pil_img.mode, (height, height), background_color)
+                                result.paste(
+                                    pil_img, ((height - width) // 2, 0))
                                 return result
                         image = expand2square(image)
                     elif image_process_mode == "Crop":
@@ -134,11 +139,13 @@ class Conversation:
                     elif image_process_mode == "Resize":
                         image = image.resize((336, 336))
                     else:
-                        raise ValueError(f"Invalid image_process_mode: {image_process_mode}")
+                        raise ValueError(
+                            f"Invalid image_process_mode: {image_process_mode}")
                     max_hw, min_hw = max(image.size), min(image.size)
                     aspect_ratio = max_hw / min_hw
                     max_len, min_len = 800, 400
-                    shortest_edge = int(min(max_len / aspect_ratio, min_len, min_hw))
+                    shortest_edge = int(
+                        min(max_len / aspect_ratio, min_len, min_hw))
                     longest_edge = int(shortest_edge * aspect_ratio)
                     W, H = image.size
                     if H > W:
@@ -151,7 +158,8 @@ class Conversation:
                     else:
                         buffered = BytesIO()
                         image.save(buffered, format="PNG")
-                        img_b64_str = base64.b64encode(buffered.getvalue()).decode()
+                        img_b64_str = base64.b64encode(
+                            buffered.getvalue()).decode()
                         images.append(img_b64_str)
         return images
 
@@ -166,7 +174,8 @@ class Conversation:
                     max_hw, min_hw = max(image.size), min(image.size)
                     aspect_ratio = max_hw / min_hw
                     max_len, min_len = 800, 400
-                    shortest_edge = int(min(max_len / aspect_ratio, min_len, min_hw))
+                    shortest_edge = int(
+                        min(max_len / aspect_ratio, min_len, min_hw))
                     longest_edge = int(shortest_edge * aspect_ratio)
                     W, H = image.size
                     if H > W:
@@ -176,7 +185,8 @@ class Conversation:
                     image = image.resize((W, H))
                     buffered = BytesIO()
                     image.save(buffered, format="JPEG")
-                    img_b64_str = base64.b64encode(buffered.getvalue()).decode()
+                    img_b64_str = base64.b64encode(
+                        buffered.getvalue()).decode()
                     img_str = f'<img src="data:image/png;base64,{img_b64_str}" alt="user upload image" />'
                     ret.append([img_str, None])
                     msg = msg.replace('<image>', '').strip()
@@ -251,8 +261,7 @@ conv_vicuna_v0 = Conversation(
 )
 
 conv_vicuna_v1 = Conversation(
-    system="A chat between a curious user and an artificial intelligence assistant. "
-    "The assistant gives helpful, detailed, and polite answers to the user's questions.",
+    system="A chat between a user and an AI vision-language assistant that evaluates the planning performance of a robot manipulation system.",
     roles=("USER", "ASSISTANT"),
     version="v1",
     messages=(),
